@@ -2,20 +2,26 @@
 
 ### GET /info
 
-Returns information about the service instance:
+Returns information about the service instance, in JSON format:
 * service version
 * the supported algorithm (always `rx/0`)
 * the maximum number of parallel requests the service can support
+* the current RandomX seed (in hex format)
+* the total number of hashes the service has calculated
 
 #### Example
 
 ```
 curl http://localhost:39093/info
 ```
-```
-RandomX Service v1.0.0
-algorithm: rx/0
-threads: 2
+```json
+{
+	"randomx_service": "v1.0.1",
+	"algorithm": "rx/0",
+	"threads": 2,
+	"seed": "74657374206b657920303030",
+	"hashes": 1
+}
 ```
 
 ### POST /seed

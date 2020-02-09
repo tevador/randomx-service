@@ -37,6 +37,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <locale>
 #include <iostream>
 #include <array>
+#include <sstream>
 
 namespace randomx {
 
@@ -305,7 +306,21 @@ namespace randomx {
 		data_->server_
 			.Get("/info", [&](ServiceWorker& w, const httplib::Request& req, httplib::Response& res) {
 				allowCors("GET", req, res);
-				res.set_content("RandomX Service v" RANDOMX_SERVICE_VERSION "\nalgorithm: " SERVICE_ALGORITHM "\nthreads: " + std::to_string(data_->threads_), "text/plain");
+				std::stringstream info;
+				info << "{\n";
+				info << "\t\"randomx_service\": \"v" RANDOMX_SERVICE_VERSION "\",\n";
+				info << "\t\"algorithm\": \"" SERVICE_ALGORITHM "\",\n";
+				info << "\t\"threads\": " << data_->threads_ << ",\n";
+				info << "\t\"seed\": ";
+				if (data_->initialized_) {
+					info << "\"" << data_->seedHex_ << "\"";
+				}
+				else {
+					info << "null";
+				}
+				info << ",\n\t\"hashes\": " << data_->hashes_.load() << "\n";
+				info << "}\n";
+				res.set_content(info.str(), "application/json");
 			})
 			.Post("/seed", [&](ServiceWorker& w, const httplib::Request& req, httplib::Response& res) {
 				allowCors("POST", req, res);
@@ -336,6 +351,7 @@ namespace randomx {
 				}
 				RandomxHash hash;
 				randomx_calculate_hash(w.vm_, body.data(), body.size(), hash.data());
+				data_->hashes_.fetch_add(1);
 				outputBody(req, res, hash);
 			})
 			.Post("/batch", [&](ServiceWorker& w, const httplib::Request& req, httplib::Response& res) {
@@ -359,6 +375,7 @@ namespace randomx {
 					randomx_calculate_hash_next(w.vm_, batch[i].data(), batch[i].size(), hashes[i - 1].data());
 				}
 				randomx_calculate_hash_last(w.vm_, hashes.back().data());
+				data_->hashes_.fetch_add(hashes.size());
 				outputBody(req, res, hashes);
 			})
 			.Options("/seed", options)

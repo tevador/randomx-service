@@ -28,6 +28,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
+#include <cstdint>
+#include <atomic>
 #include <iostream>
 #include <climits>
 #include <string>
@@ -100,6 +102,7 @@ namespace randomx {
 		std::string seedHex_;
 		std::string origin_;
 		bool initialized_;
+		std::atomic<uint64_t> hashes_;
 	};
 
 }
