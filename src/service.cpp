@@ -186,7 +186,11 @@ namespace randomx {
 		else if (ct == BINARY_FORMAT_BATCH) {
 			while (pos < input.size()) {
 				std::vector<char> body;
-				size_t segmentSize = input[pos];
+				int segmentSize = input[pos];
+				if (segmentSize < 0) {
+					res.status = 400;
+					return false;
+				}
 				pos++;
 				if (pos + segmentSize > input.size()) {
 					res.status = 400;

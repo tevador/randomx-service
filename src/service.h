@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <memory>
 
-#define RANDOMX_SERVICE_VERSION "1.0.1"
+#define RANDOMX_SERVICE_VERSION "1.0.2"
 
 namespace httplib {
 	struct Request;
