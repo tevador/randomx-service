@@ -59,6 +59,8 @@ To allow requests from the browser, use the `-origin` command line option. For e
 ./randomx-service -origin https://example.com
 ```
 
+Web-mining demo/benchmark page: https://tevador.github.io/
+
 ### Notes
 * using the `/batch` API, web-miners are able to reach similar performance as native miners
 * HTTP requests to localhost from HTTPS websites are currently blocked by [Safari](https://bugs.webkit.org/show_bug.cgi?id=171934), but this behavior may change in the future (refer to the linked bugtracker).
